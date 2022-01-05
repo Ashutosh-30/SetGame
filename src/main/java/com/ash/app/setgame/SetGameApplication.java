@@ -30,8 +30,11 @@ public class SetGameApplication {
     public CommandLineRunner CommandLineRunnerBean() {
         return (args) -> {
             long start = System.nanoTime();
+
+            // reading the file placed in the resources folder via the provided name in Program Args
             Scanner scn = new Scanner(ResourceUtils.getFile("classpath:"+args[0]));
             List<String> input = new ArrayList();
+            //constructing list of strings using the file contents
             while(scn.hasNextLine()) {
                 input.add(scn.nextLine());
             }

@@ -15,12 +15,15 @@ public class GameLogic {
     private List<String> originalInput;
     private List<int[]> validCardSets;
 
+    // converts the list of strings to list of CARDs
     public void convertInputToCardList(List<String> input) throws Exception {
         originalInput = input;
         cardList = new ArrayList();
+        //first line contains size of input
         int inputSize = Integer.parseInt(input.get(0));
         //System.out.println(inputSize);
 
+        //verifying if size specified is correct
         if(inputSize != input.size()-1) {
             throw new Exception("Number of Cards provided are not equal to specified number");
         }
@@ -86,11 +89,13 @@ public class GameLogic {
     }
 
     public void findValidCardSets() {
-        validCardSets = new ArrayList();
+        validCardSets = new ArrayList<>();
+        //checking 1 by 1 the validity of SETs
         for(int i=0; i<cardList.size(); i++) {
             for(int j=i+1; j<cardList.size(); j++) {
                 for(int k=j+1; k<cardList.size(); k++) {
                     if(isValidSet(cardList.get(i), cardList.get(j), cardList.get(k))) {
+                        //inserting the indexes of the cards rather than cards itself: This helps me in calculating disjoint SET
                         validCardSets.add(new int[]{i, j, k});
                     }
                 }
@@ -102,21 +107,21 @@ public class GameLogic {
     }
 
     public void findLargestDisjointCollectionOfSets() {
-        // key is the number and value is the indexes of the row where this value is present
-        Map<Integer, Set<Integer>> tempMap = new HashMap<>();
+        // key is the card and value is the indexes of the row where this card occurs
+        Map<Integer, Set<Integer>> cardToOccurMap = new HashMap<>();
         Set<int[]> largestDisjointSet = new HashSet<>();
 
         for(int i=0; i<validCardSets.size(); i++) {
             int[] set = validCardSets.get(i);
             for(int j=0; j<set.length; j++) {
-                tempMap.putIfAbsent(set[j], new HashSet<>());
-                tempMap.get(set[j]).add(i);
+                cardToOccurMap.putIfAbsent(set[j], new HashSet<>());
+                cardToOccurMap.get(set[j]).add(i);
             }
         }
 
         // sort map based on increasing count
-        // size of map values denote the number of times the key appears
-        List<Map.Entry<Integer, Set<Integer>>> list = new LinkedList<>(tempMap.entrySet());
+        // size of map values denote the number of times the card appears
+        List<Map.Entry<Integer, Set<Integer>>> list = new LinkedList<>(cardToOccurMap.entrySet());
         Collections.sort(list, (a, b) -> a.getValue().size() - b.getValue().size());
 
         // put data from sorted list to map
@@ -126,13 +131,14 @@ public class GameLogic {
         }
 
         Set<Integer> visitedRows = new HashSet<>();
+        //the cards that have been visited
         Set<Integer> visitedNums = new HashSet<>();
         for(Map.Entry<Integer, Set<Integer>> entry: map.entrySet()) {
             if(visitedNums.contains(entry.getKey())) {
                 continue;
             }
 
-            // iterate over all the rows where this number is present
+            // iterate over all the rows where this card is present
             for(int idx: entry.getValue()) {
                 if(!visitedRows.contains(idx)) {
                     // check if the row includes any of the visitedNums, if yes, this row cannot be included
@@ -150,7 +156,7 @@ public class GameLogic {
 
                     largestDisjointSet.add(set);
                     visitedRows.add(idx);
-                    // add all the numbers in this row to visitedNums
+                    // add all the cards in this row to visitedNums
                     for(int j=0;j<set.length;j++) {
                         visitedNums.add(set[j]);
                     }
