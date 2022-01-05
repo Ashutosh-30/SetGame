@@ -6,3 +6,9 @@ To Run This:
 3. Provide the file name to be treated as input in the Program Arguments of your run/debug configuration:
 4. "Run" the code using your IDEA.
 5. Console will print the information in desired format.
+
+** Note : The main logic resides in the class : GameLogic.java
+** Note : I have tried to create a proper application, hence the elaborate service, model structure in the app. I have tried to use ENUMS and proper POJOs(models) as well wherever applicable.
+
+Hope this code runs perfectly fine for you. Please contact me if it doesn't.
+Really hoping to hear back from you.
