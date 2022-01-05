@@ -22,15 +22,13 @@ public class SetGameApplication {
     @Autowired
     GameLogic gameLogic;
 
-    public static void main(String[] args) throws FileNotFoundException {
+    public static void main(String[] args) {
         SpringApplication.run(SetGameApplication.class, args);
     }
 
     @Bean
     public CommandLineRunner CommandLineRunnerBean() {
         return (args) -> {
-            //System.out.println("In CommandLineRunnerImpl ");
-
             long start = System.nanoTime();
             Scanner scn = new Scanner(ResourceUtils.getFile("classpath:"+args[0]));
             List<String> input = new ArrayList();
